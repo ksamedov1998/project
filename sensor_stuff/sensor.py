@@ -1,4 +1,5 @@
 import serial
+from models import plant
 
 
 def processRequest(serial_port, seconds):
@@ -14,6 +15,6 @@ def sendRequestTo(serial_port, seconds):
 
 def waitForData(arduino):
     while True:
-        line = arduino.avia()
+        line = arduino.readline()
         break
     return line.decode()
