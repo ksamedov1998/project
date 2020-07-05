@@ -1,12 +1,25 @@
-from sqlalchemy import text
-from sqlalchemy import exc as execute
+import mysql.connector
 
-insert_plant = text("""
-                insert into Plant(name,optional_humidity) values(:name,:optimal_humidity)
-                    """)
+import properties
+
+insert_plant = """
+                insert into Plant(Name,const_humidity) values(%s,%s)
+                    """
+get_last_inserted_id = "SELECT LAST_INSERT_ID()"
+
 
 def insertToDatabase(plant):
-
-    rs = execute(insert_plant, name=plant.name,optimal_humidity=plant.opt_Humidity)
-
-    return None
+    mydb = mysql.connector.connect(
+        host="136.244.85.251",
+        user="unec",
+        password="33290177aA+",
+        database="haczkathon"
+    )
+    cursor = mydb.cursor()
+    params = (plant.name, plant.opt_Humidity)
+    cursor.execute(insert_plant, params)
+    cursor.execute(get_last_inserted_id)
+    row = cursor.fetchone()
+    plant.id = row[0]
+    mydb.commit()
+    return plant

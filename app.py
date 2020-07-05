@@ -1,4 +1,5 @@
 from ctypes import Union
+from datetime import datetime
 
 import jsonify as jsonify
 from flask import Flask, render_template, request, json, Response
@@ -32,8 +33,14 @@ def request_to_arduino(seconds, port):
 @app.route('/add/plant/', methods=['POST'])
 @expects_json(plant_schema)
 def add_plant():
-    insertToDatabase(Plant(request.get_json()))
-    return Response(status=201)
+    plant = insertToDatabase(Plant(request.get_json()))
+    return Response(response=json.dumps(vars(plant)), status=201)
+
+
+@app.errorhandler(Exception)
+def handle_bad_request(e):
+    error = {"status":400,"message":"Something went wrong","date":datetime.now()}
+    return json.dumps(error)
 
 
 if __name__ == '__main__':
