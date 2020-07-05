@@ -11,6 +11,7 @@ get_plants = "select * from Plant"
 get_plant_by_id = "select * from Plant where Id = %s "
 
 
+# todo delete db credential at pushing
 def connect_to_db():
     return mysql.connector.connect(
         database="hackathon"
@@ -36,12 +37,15 @@ def get_plant_from_db(id):
     if id is None:
         cursor.execute(get_plants)
         rows = cursor.fetchall()
-        for row in rows:
-            print(row)
-            data.append(Plant(row[0], row[1], row[2]))
+        if rows is not None:
+            for row in rows:
+                print(row)
+                data.append(Plant(row[0], row[1], row[2]))
     else:
         cursor.execute(get_plant_by_id, (id,))
         row = cursor.fetchone()
-        data.append(Plant(row[0], row[1], row[2]))
+        if row is not None:
+            data.append(Plant(row[0], row[1], row[2]))
+
 
     return data
