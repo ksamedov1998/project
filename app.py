@@ -1,7 +1,9 @@
 from datetime import datetime
 
+import flask_cors
 import mysql
 from flask import Flask, render_template, request, json, Response
+from flask_cors import CORS
 from flask_expects_json import expects_json
 
 from models import plant
@@ -11,6 +13,7 @@ from service.plant_service import insertToDatabase, get_plant_from_db
 from util.Encoder import MyEncoder
 
 app = Flask(__name__)
+CORS(app, resources=r'/*')
 
 plant_schema = {
     'type': 'object',

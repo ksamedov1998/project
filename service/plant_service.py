@@ -14,6 +14,9 @@ get_plant_by_id = "select * from Plant where Id = %s "
 # todo delete db credential at pushing
 def connect_to_db():
     return mysql.connector.connect(
+        host="136.244.85.251",
+        user="unec",
+        password="33290177aA+",
         database="hackathon"
     )
 
