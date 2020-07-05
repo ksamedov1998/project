@@ -1,14 +1,13 @@
-from ctypes import Union
 from datetime import datetime
 
-import jsonify as jsonify
 from flask import Flask, render_template, request, json, Response
 from flask_expects_json import expects_json
 
 from models import plant
 from models.plant import Plant
 from sensor_stuff import sensor
-from service.plant_service import insertToDatabase
+from service.plant_service import insertToDatabase, get_plant_from_db
+from util.Encoder import MyEncoder
 
 app = Flask(__name__)
 
@@ -37,9 +36,16 @@ def add_plant():
     return Response(response=json.dumps(vars(plant)), status=201)
 
 
+@app.route('/plant/<plant_id>', methods=['GET'])
+@app.route('/plant/', defaults={'plant_id': None})
+def get_plant(plant_id):
+    plant = get_plant_from_db(plant_id)
+    return Response(response=MyEncoder().encode(plant), status=200)
+
+
 @app.errorhandler(Exception)
 def handle_bad_request(e):
-    error = {"status":400,"message":"Something went wrong","date":datetime.now()}
+    error = {"status": 400, "message": "Something went wrong", "date": datetime.now()}
     return json.dumps(error)
 
 
