@@ -50,10 +50,10 @@ def handle_bad_request(e):
     return json.dumps(error)
 
 
-# @app.errorhandler(Exception)
-# def handle_bad_request(e):
-#     error = {"status": 400, "message": "Something went wrong", "date": datetime.now()}
-#     return json.dumps(error)
+@app.errorhandler(Exception)
+def handle_bad_request(e):
+    error = {"status": 400, "message": "Something went wrong", "date": datetime.now()}
+    return json.dumps(error)
 
 
 if __name__ == '__main__':
