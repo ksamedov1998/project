@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import mysql
 from flask import Flask, render_template, request, json, Response
 from flask_expects_json import expects_json
 
@@ -41,6 +42,12 @@ def add_plant():
 def get_plant(plant_id):
     plant = get_plant_from_db(plant_id)
     return Response(response=MyEncoder().encode(plant), status=200)
+
+
+@app.errorhandler(mysql.connector.Error)
+def handle_bad_request(e):
+    error = {"status": 400, "message": "Database connection failed", "date": datetime.now()}
+    return json.dumps(error)
 
 
 @app.errorhandler(Exception)
